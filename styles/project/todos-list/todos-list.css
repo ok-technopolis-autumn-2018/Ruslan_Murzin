@@ -1,0 +1,38 @@
+
+.todos-list {
+
+    }
+
+    .todos-list_item {
+        padding: 16px;
+        }
+        .todos-list_item:after {
+            content: '';
+            clear: both;
+            display: table;
+            }
+
+        .todos-list_item_ready-marker {
+            float: left;
+            margin-right: 16px;
+            }
+
+        .todos-list_item_text-w {
+            overflow: hidden;
+            }
+
+            .todos-list_item_text {
+                width: 100%;
+                }
+
+        .todos-list_item_remove {
+            float: right;
+            margin-left: 16px;
+            /*display: none;*/
+            visibility: hidden;
+            }
+
+            .todos-list_item:hover .todos-list_item_remove {
+                /*display: block;*/
+                visibility: visible;
+                }
