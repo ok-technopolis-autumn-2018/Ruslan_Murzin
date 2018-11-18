@@ -1,0 +1,60 @@
+
+.todos-toolbar {
+    font-size: 14px;
+    padding: 10px 15px;
+    height: 20px;
+    text-align: center;
+    border-top: 1px solid #e6e6e6;
+    color: #777;
+    margin-top: -1px;
+    }
+    .todos-toolbar:after {
+        content: '';
+        clear: both;
+        display: table;
+    }
+
+    .todos-toolbar_unready-counter {
+        float: left;
+        text-align: left;
+    }
+
+    .todos-toolbar_filters {
+        display: inline;
+    }
+    .todos-toolbar_filters .filters-item {
+        font-size: 14px;
+        height: 20px;
+        text-align: center;
+        color: inherit;
+        border: none;
+        border-radius: 4px;
+        margin-left: 1px;
+        margin-right: 1px;
+        background-color: #fff;
+    }
+        .todos-toolbar_filters .filters-item:hover {
+            margin-left: 0px;
+            margin-right: 0px;
+            border: 1px solid #e6e6e6;
+        }
+            .todos-toolbar_filters .filters-item.__selected {
+                margin-left: 0px;
+                margin-right: 0px;
+                border-radius: 4px;
+                border: 1px solid #e6e6e6;
+            }
+
+    .todos-toolbar_clear-completed {
+        float: right;
+        font-size: 14px;
+        height: 20px;
+        text-align: center;
+        color: #777;
+        background-color: #fff;
+        border: none;
+        border-radius: 4px;
+    }
+        .todos-toolbar_clear-completed:hover {
+            text-decoration: underline;
+        }
