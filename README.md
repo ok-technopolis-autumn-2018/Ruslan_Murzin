@@ -5,7 +5,7 @@
 Install Node.js (use [nvm](https://github.com/creationix/nvm))
 
 ```bash
-npm init
+npm i
 ```
 
 ## Run
