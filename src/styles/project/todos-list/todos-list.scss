@@ -5,6 +5,7 @@
 
     .todos-list_item {
         padding: 16px;
+        display: flex;
         }
         .todos-list_item:after {
             content: '';
@@ -13,23 +14,54 @@
             }
 
         .todos-list_item_ready-marker {
+            align-self: center;
+            order: 1;
             float: left;
             margin-right: 16px;
             }
 
         .todos-list_item_text-w {
+            align-self: flex-start;
+            flex: 1 0;
+            order: 10;
+            flex-grow: 100;
             overflow: hidden;
             }
 
             .todos-list_item_text {
+                text-decoration: none;
+                resize: none;
+                border: none;
+                font-size: 20px;
+                color: #707070;
+                outline: none;
+                background: none;
+                height: 40px;
+                vertical-align: middle;
+                padding-top: 0;
+                overflow: hidden;
                 width: 100%;
                 }
 
         .todos-list_item_remove {
+            align-self: flex-end;
+            order: 60;
             float: right;
             margin-left: 16px;
+            width: 22px;
+            height: 22px;
             /*display: none;*/
             visibility: hidden;
+            background: url(../../../images/close.png) no-repeat 0 0;
+            border: none;
+            }
+
+        @media (-webkit-min-device-pixel-ratio: 1.5),
+               (min-resolution: 120dpi),
+               (min-resolution: 1.5dppx) {
+            .todos-list_item_remove {
+                background: url(../../../images/close@2x.png) no-repeat 0 0;
+                }
             }
 
             .todos-list_item:hover .todos-list_item_remove {
