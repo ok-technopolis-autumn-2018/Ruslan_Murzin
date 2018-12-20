@@ -6,6 +6,7 @@
     .todos-list_item {
         padding: 16px;
         display: flex;
+        border-top: 1px solid #e6e6e6;
         }
         .todos-list_item:after {
             content: '';
