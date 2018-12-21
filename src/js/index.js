@@ -19,8 +19,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     };
 
-
-
     //Компонент добавления
     AddComponent.prototype = new Eventable();
     AddComponent.prototype.useCurrentText = function () {
@@ -39,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     this.useCurrentText();
                 }
                 break;
-            case 'click':{
+            case 'click': {
                     e.preventDefault();
                     this.useCurrentText();
                     break;
@@ -59,6 +57,9 @@ document.addEventListener("DOMContentLoaded", function () {
     function ListItemComponent(text) {
     	var templateResult = templates.item({text: text});
     	this._root = templateResult.root;
+    	var checkbox = templateResult.root.querySelector('.custom-checkbox_target');
+    	checkbox.addEventListener('change', checkFilters);
+    	checkbox.addEventListener('change', renewUnreadyCounter);
     	templateResult.deleteLink.addEventListener('click', this);
     	this._initEventable();
     }
@@ -89,6 +90,8 @@ document.addEventListener("DOMContentLoaded", function () {
     	this._items.push(item);
     	this._root.appendChild(item.getRoot());
     	item.on('remove', this._onItemRemove, this);
+    	renewUnreadyCounter();
+    	checkFilters();
     };
 
     ListComponent.prototype._onItemRemove = function (item) {
@@ -97,6 +100,7 @@ document.addEventListener("DOMContentLoaded", function () {
     		this._root.removeChild(item.getRoot());
     		this._items.splice(itemIndex, 1);
     	}
+    	renewUnreadyCounter();
     };
 
     //Определение текущих компонентов
@@ -105,6 +109,120 @@ document.addEventListener("DOMContentLoaded", function () {
     var add = new AddComponent(addNode);
     var list = new ListComponent(listNode);
     add.on('add', list.add, list);
+
+    var listItems = listNode.getElementsByClassName('todos-list_item');
+    var checkboxes = listNode.getElementsByClassName('custom-checkbox_target');
+
+    //Поставить галочку на всех элементах
+    var checkAll = document.querySelector('.todo-creator_check-all');
+    checkAll.addEventListener('click', function(e) {
+        e.preventDefault();
+        var numOfChecked = 0;
+        for(var i = 0; i < checkboxes.length; i++) {
+            if(checkboxes[i].checked === true) {
+                numOfChecked++;
+            }
+        }
+        for(var i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].checked = (numOfChecked === checkboxes.length)
+            ? false
+            : true;
+        }
+        checkFilters();
+        renewUnreadyCounter();
+    });
+
+    //Удаление выполненных
+    var clearCompleted = document.querySelector('.todos-toolbar_clear-completed');
+    clearCompleted.addEventListener('click', function(e) {
+        e.preventDefault();
+        for(var i = 0; i < checkboxes.length; ) {
+            if(checkboxes[i].checked === true) {
+                listItems[i].remove();
+            } else {
+                i++;
+            }
+        }
+        renewUnreadyCounter();
+    });
+
+    //Выбор фильтра
+    var filters = document.querySelector('.todos-toolbar_filters');
+    filters.addEventListener('click', function (e) {
+        e.preventDefault();
+        var all = filters.querySelector('._all');
+        var active = filters.querySelector('._active');
+        var complete = filters.querySelector('._complete');
+
+        switch(e.target.className.replace(' __selected', '')) {
+            case 'filters-item _all' : {
+                active.className = active.className.replace(' __selected', '');
+                complete.className = complete.className.replace(' __selected', '');
+                e.target.className = 'filters-item _all __selected';
+                checkFilters();
+                break;
+            }
+            case 'filters-item _active' : {
+                all.className = all.className.replace(' __selected', '');
+                complete.className = complete.className.replace(' __selected', '');
+                e.target.className = 'filters-item _active __selected';
+                checkFilters();
+                break;
+            }
+            case 'filters-item _complete' : {
+                all.className = all.className.replace(' __selected', '');
+                active.className = active.className.replace(' __selected', '');
+                e.target.className = 'filters-item _complete __selected';
+                checkFilters();
+                break;
+            }
+        }
+    });
+
+    //Отображение элементов соответствующих выбранному фильтру
+    function checkFilters() {
+        var selected = filters.querySelector('.__selected');
+        switch(selected.className.replace(' __selected', '')) {
+            case 'filters-item _all' : {
+                for (var i = 0; i < listItems.length; i++) {
+                    listItems[i].style.display = 'block';
+                }
+                break;
+            }
+            case 'filters-item _active' : {
+                for (var i = 0; i < listItems.length; i++) {
+                    if(checkboxes[i].checked === true) {
+                        listItems[i].style.display = 'none';
+                    } else {
+                        listItems[i].style.display = 'block';
+                    }
+                }
+                break;
+            }
+            case 'filters-item _complete' : {
+                for (var i = 0; i < listItems.length; i++) {
+                    if(checkboxes[i].checked === true) {
+                        listItems[i].style.display = 'block';
+                    } else {
+                        listItems[i].style.display = 'none';
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+    //Обновление счетчика невыполненных задач
+    function renewUnreadyCounter() {
+        var unreadyCounter = 0;
+        for (var i = 0; i < checkboxes.length; i++) {
+            if(checkboxes[i].checked === false) {
+                unreadyCounter++;
+            }
+        }
+        var toolbar_item = document.querySelector('.todos-toolbar_unready-counter');
+        toolbar_item.innerText = unreadyCounter + ' items left';
+    }
 
     console.log('init');
 });
